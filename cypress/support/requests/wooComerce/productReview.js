@@ -14,7 +14,7 @@ Cypress.Commands.add("postProductReviewWooCommerce", function(token, product_id,
           }
     })
 })
-Cypress.Commands.add("putProductReviewWooCommerce", function(token, product_id, review, reviewer, reviewer_email, rating, id){
+Cypress.Commands.add("putProductReviewWooCommerce", function(token, rating, id){
     cy.request({
         method: "PUT",
         url: Cypress.env("wooCommerce") + Cypress.env("productReview") + "/" + id,
@@ -22,10 +22,6 @@ Cypress.Commands.add("putProductReviewWooCommerce", function(token, product_id, 
             Authorization: token
         },
         body: {
-            "product_id": product_id,
-            "review": review,
-            "reviewer": reviewer,
-            "reviewer_email": reviewer_email,
             "rating": rating
           }
     })

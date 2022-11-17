@@ -8,10 +8,6 @@
     },
 
     "ProductsEditar": {
-        "product_id": 22,
-        "review": "Bad album!",
-        "reviewer": "John Doe",
-        "reviewer_email": "john.doe2@example.com",
         "rating": 2
     },
     "DeletarProductReview": {
