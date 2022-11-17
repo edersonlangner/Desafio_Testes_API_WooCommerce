@@ -6,12 +6,12 @@ import { faker } from '@faker-js/faker'
 import productReviewWooCommerceSchema from '../../contracts/productReview.contract'
 
 describe('Product Review WooCommerce', () => {
-     const review = faker.company.name()
-     const reviewer = faker.name.firstName()
-     const reviewerEmail = faker.internet.email(reviewer)
-    it('Criar Product Review - Aceitação e Contrato', () => {
+    it('Criar Product Review - Aceitação', () => {
+        const review = faker.name.firstName()
+        const reviewer = faker.name.firstName()
+        const reviewerEmail = faker.internet.email(reviewer)
         cy.postProductReviewWooCommerce(
-            
+
             tokenFixture.token,
             productsFixture.ProductsValido.product_id,
             review,
@@ -27,17 +27,34 @@ describe('Product Review WooCommerce', () => {
                 expect(response.body.reviewer).eq(reviewer)
                 expect(response.body.reviewer_email).eq(reviewerEmail)
                 expect(response.body.rating).eq(productsFixture.ProductsValido.rating)
-                return productReviewWooCommerceSchema.validateAsync(response.body),
-                    cy.deleteProductReviewWooCommerce(
-                        tokenFixture.token,
-                        id,
-                        productsFixture.DeletarProductReview.force
-                    ).then((response) => {
-                        expect(response.status).to.eq(statusFixtures.ok)
-                    })
+                cy.deleteProductReviewWooCommerce(
+                    tokenFixture.token,
+                    id,
+                    productsFixture.DeletarProductReview.force
+                ).then((response) => {
+                    expect(response.status).to.eq(statusFixtures.ok)
+                })
             })
     })
-    it('Editar Product Review - Aceitação e Contrato', () => {
+    it('Criar Product Review - Contrato', () => {
+        const review = faker.name.firstName()
+        const reviewer = faker.name.firstName()
+        const reviewerEmail = faker.internet.email(reviewer)
+        cy.postProductReviewWooCommerce(
+            tokenFixture.token,
+            productsFixture.ProductsValido.product_id,
+            review,
+            reviewer,
+            reviewerEmail,
+            productsFixture.ProductsValido.rating,
+        ).then((response) => {
+            return productReviewWooCommerceSchema.validateAsync(response.body)
+        })
+    })
+    it('Editar Product Review - Aceitação', () => {
+        const review = faker.name.firstName()
+        const reviewer = faker.name.firstName()
+        const reviewerEmail = faker.internet.email(reviewer)
         cy.postProductReviewWooCommerce(
             tokenFixture.token,
             productsFixture.ProductsValido.product_id,
@@ -57,21 +74,47 @@ describe('Product Review WooCommerce', () => {
                     var id = response.body.id
                     expect(response.status).to.eq(statusFixtures.ok)
                     expect(response.body.rating).to.eq(productsFixture.ProductsEditar.rating)
-                    return productReviewWooCommerceSchema.validateAsync(response.body),
-                        cy.deleteProductReviewWooCommerce(
-                            tokenFixture.token,
-                            id,
-                            productsFixture.DeletarProductReview.force
-                        ).then((response) => {
-                            expect(response.status).to.eq(statusFixtures.ok)
-                        })
+                    cy.deleteProductReviewWooCommerce(
+                        tokenFixture.token,
+                        id,
+                        productsFixture.DeletarProductReview.force
+                    ).then((response) => {
+                        expect(response.status).to.eq(statusFixtures.ok)
+                    })
 
                 })
 
 
             })
     })
-    it('Deletar Product Review - Aceitação e Contrato', () => {
+    it('Editar Product Review - Contrato', () => {
+        const review = faker.name.firstName()
+        const reviewer = faker.name.firstName()
+        const reviewerEmail = faker.internet.email(reviewer)
+        cy.postProductReviewWooCommerce(
+            tokenFixture.token,
+            productsFixture.ProductsValido.product_id,
+            review,
+            reviewer,
+            reviewerEmail,
+            productsFixture.ProductsValido.rating,
+        )
+            .then((response) => {
+                var id = response.body.id
+                cy.putProductReviewWooCommerce(
+                    tokenFixture.token,
+                    productsFixture.ProductsEditar.rating,
+                    id
+
+                ).then((response) => {
+                    return productReviewWooCommerceSchema.validateAsync(response.body)
+                })
+            })
+    })
+    it('Deletar Product Review - Aceitação', () => {
+        const review = faker.name.firstName()
+        const reviewer = faker.name.firstName()
+        const reviewerEmail = faker.internet.email(reviewer)
         cy.postProductReviewWooCommerce(
             tokenFixture.token,
             productsFixture.ProductsValido.product_id,
@@ -87,16 +130,37 @@ describe('Product Review WooCommerce', () => {
                     id,
                     productsFixture.DeletarProductReview.force
                 ).then((response) => {
-                    console.log(response, "Teste"),
                     expect(response.status).to.eq(statusFixtures.ok)
                     expect(response.body.previous.product_id).eq(productsFixture.ProductsValido.product_id)
                     expect(response.body.previous.review).eq(review)
                     expect(response.body.previous.reviewer).eq(reviewer)
                     expect(response.body.previous.reviewer_email).eq(reviewerEmail)
                     expect(response.body.previous.rating).eq(productsFixture.ProductsValido.rating)
-                    return productReviewWooCommerceSchema.validateAsync(response.body.previous)
                 })
 
+            })
+    })
+    it('Deletar Product Review - Contrato', () => {
+        const review = faker.name.firstName()
+        const reviewer = faker.name.firstName()
+        const reviewerEmail = faker.internet.email(reviewer)
+        cy.postProductReviewWooCommerce(
+            tokenFixture.token,
+            productsFixture.ProductsValido.product_id,
+            review,
+            reviewer,
+            reviewerEmail,
+            productsFixture.ProductsValido.rating,
+        )
+            .then((response) => {
+                var id = response.body.id
+                cy.deleteProductReviewWooCommerce(
+                    tokenFixture.token,
+                    id,
+                    productsFixture.DeletarProductReview.force
+                ).then((response) => {
+                    return productReviewWooCommerceSchema.validateAsync(response.body.previous)
+                })
             })
     })
 })
