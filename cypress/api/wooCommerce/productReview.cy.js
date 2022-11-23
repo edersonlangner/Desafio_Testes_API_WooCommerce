@@ -95,7 +95,7 @@ describe('Product Review WooCommerce', () => {
                 })
 
 
-            })
+            }) 
     })
     it('Editar Product Review - Contrato', () => {
         const review = faker.name.firstName()
