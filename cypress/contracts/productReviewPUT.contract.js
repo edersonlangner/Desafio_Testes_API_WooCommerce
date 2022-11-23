@@ -1,6 +1,6 @@
 const joi = require('joi');
 
-const productReviewWooCommerceSchema = joi.object({
+const productReviewPUTWooCommerceSchema = joi.object({
     "id": joi.number().required(),
     "date_created": joi.date().required(),
     "date_created_gmt": joi.date().required(),
@@ -34,7 +34,7 @@ const productReviewWooCommerceSchema = joi.object({
                 "href": joi.string().required()
             })
         )
-    })
+    }).required()
 }).required()
 
-export default productReviewWooCommerceSchema
+export default productReviewPUTWooCommerceSchema

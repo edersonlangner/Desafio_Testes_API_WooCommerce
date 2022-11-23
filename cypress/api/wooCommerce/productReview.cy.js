@@ -3,7 +3,10 @@ import tokenFixture from "../../fixtures/token.json"
 import productsFixture from "../../fixtures/productReview.json"
 import statusFixtures from "../../fixtures/status.json"
 import { faker } from '@faker-js/faker'
-import productReviewWooCommerceSchema from '../../contracts/productReview.contract'
+import productReviewPOSTWooCommerceSchema from '../../contracts/productReviewPOST.contract'
+import productReviewPUTWooCommerceSchema from '../../contracts/productReviewPUT.contract'
+import productReviewDELETEWooCommerceSchema from '../../contracts/productReviewDELETE.contract'
+
 
 describe('Product Review WooCommerce', () => {
     it('Criar Product Review - Aceitação', () => {
@@ -48,7 +51,7 @@ describe('Product Review WooCommerce', () => {
             reviewerEmail,
             productsFixture.ProductsValido.rating,
         ).then((response) => {
-            return productReviewWooCommerceSchema.validateAsync(response.body)
+            return productReviewPOSTWooCommerceSchema.validateAsync(response.body)
         })
     })
     it('Editar Product Review - Aceitação', () => {
@@ -65,15 +68,22 @@ describe('Product Review WooCommerce', () => {
         )
             .then((response) => {
                 var id = response.body.id
+
                 cy.putProductReviewWooCommerce(
                     tokenFixture.token,
                     productsFixture.ProductsEditar.rating,
                     id
 
                 ).then((response) => {
-                    var id = response.body.id
+                    var review = response.body.review
+                    var reviewer = response.body.reviewer
+                    var reviewerEmail = response.body.reviewer_email
                     expect(response.status).to.eq(statusFixtures.ok)
                     expect(response.body.rating).to.eq(productsFixture.ProductsEditar.rating)
+                    expect(response.body.review).to.eq(review)
+                    expect(response.body.reviewer).to.eq(reviewer)
+                    expect(response.body.reviewer_email).to.eq(reviewerEmail)
+
                     cy.deleteProductReviewWooCommerce(
                         tokenFixture.token,
                         id,
@@ -107,7 +117,7 @@ describe('Product Review WooCommerce', () => {
                     id
 
                 ).then((response) => {
-                    return productReviewWooCommerceSchema.validateAsync(response.body)
+                    return productReviewPUTWooCommerceSchema.validateAsync(response.body)
                 })
             })
     })
@@ -159,7 +169,7 @@ describe('Product Review WooCommerce', () => {
                     id,
                     productsFixture.DeletarProductReview.force
                 ).then((response) => {
-                    return productReviewWooCommerceSchema.validateAsync(response.body.previous)
+                    return productReviewDELETEWooCommerceSchema.validateAsync(response.body)
                 })
             })
     })
