@@ -51,9 +51,19 @@ describe('Product Review WooCommerce', () => {
             reviewerEmail,
             productsFixture.ProductsValido.rating,
         ).then((response) => {
-            return productReviewPOSTWooCommerceSchema.validateAsync(response.body)
+            var id = response.body.id
+            return productReviewPOSTWooCommerceSchema.validateAsync(response.body),
+            cy.deleteProductReviewWooCommerce(
+                tokenFixture.token,
+                id,
+                productsFixture.DeletarProductReview.force
+            ).then((response) => {
+                expect(response.status).to.eq(statusFixtures.ok)
+            })
         })
     })
+
+
     it('Editar Product Review - Aceitação', () => {
         const review = faker.name.firstName()
         const reviewer = faker.name.firstName()
@@ -88,15 +98,14 @@ describe('Product Review WooCommerce', () => {
                         tokenFixture.token,
                         id,
                         productsFixture.DeletarProductReview.force
-                    ).then((response) => {
-                        expect(response.status).to.eq(statusFixtures.ok)
+                    ).then((response) =>{
+                    expect(response.status).to.eq(statusFixtures.ok)
                     })
-
                 })
-
-
             }) 
     })
+
+
     it('Editar Product Review - Contrato', () => {
         const review = faker.name.firstName()
         const reviewer = faker.name.firstName()
@@ -117,7 +126,15 @@ describe('Product Review WooCommerce', () => {
                     id
 
                 ).then((response) => {
-                    return productReviewPUTWooCommerceSchema.validateAsync(response.body)
+                    var id = response.body.id
+                    return productReviewPUTWooCommerceSchema.validateAsync(response.body),
+                    cy.deleteProductReviewWooCommerce(
+                        tokenFixture.token,
+                        id,
+                        productsFixture.DeletarProductReview.force
+                    ).then((response) => {
+                    expect(response.status).to.eq(statusFixtures.ok)
+                    })
                 })
             })
     })
@@ -169,6 +186,7 @@ describe('Product Review WooCommerce', () => {
                     id,
                     productsFixture.DeletarProductReview.force
                 ).then((response) => {
+                    expect(response.status).to.eq(statusFixtures.ok)
                     return productReviewDELETEWooCommerceSchema.validateAsync(response.body)
                 })
             })
